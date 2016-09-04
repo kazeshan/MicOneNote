@@ -11,7 +11,7 @@
   </div>
 
   <div>
-    
+    {{> getNoteBooks}}
   </div>
 
 </body>
@@ -29,4 +29,12 @@
 
 <template name="user_template">
   <p><b>Created Date : </b> {{createdDate}} <b>Status : </b>{{status}} <b>Token : </b> {{token}}</p>
+</template>
+
+<template name="getNoteBooks">
+  <button>Get My Notebooks</button>
+</template>
+
+<template name="notebook">
+  {{notebooks}}
 </template>

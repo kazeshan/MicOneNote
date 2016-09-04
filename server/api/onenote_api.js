@@ -12,7 +12,7 @@ Meteor.methods({
     str = str.concat("&code="+code);
     str = str.concat("&resource=https://onenote.com/");
 
-    console.log("transmitting http post");
+    console.log("--transmitting http post--");
     var data = {};
     try {
       data = HTTP.call("POST", "https://login.microsoftonline.com/4ae50cbe-be0d-4849-96c8-0ae667032237/oauth2/token",
@@ -41,8 +41,11 @@ Meteor.methods({
       var code = arr[0].substring(arr[0].indexOf("=") + 1);
       tokenPack = Meteor.call('tempFunction',uuid,code);
     }else{
-      
+
     }
     return tokenPack;
+  },
+  getNotebooks:function(tokenPack){
+    return tokenPack["token"];
   }
 });

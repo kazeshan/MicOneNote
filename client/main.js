@@ -28,6 +28,65 @@ Template.hello.events({
   },
 });
 
+Template.getNoteBooks.events({
+  'click button'(event, instance) {
+    if(!isTokenExpired()){
+      Meteor.call('getNotebooks', Session.get("tokenPack"), function(err, result){
+        alert(result);
+        Session.set("notebooks","notebook1");
+      });
+    }else{
+      alert("No key detected");
+    }
+  },
+});
+
+Template.getNoteBooks.helpers({
+  notebooks() {
+    return Session.get("notebooks");
+  }
+});
+
+
+function guidGenerator() {
+    var S4 = function() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    };
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
+function isTokenExpired(){
+  if(Session.get("tokenPack") == null){
+      return true;
+  }
+  var d = new Date();
+  var n = d.getTime();
+  var timeLeft = (Session.get("tokenPack")["expire_on"]*1000) - n;
+  if(timeLeft < 0){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+Meteor.startup(() => {
+  var fullUrl = window.location.href;
+  var uid = guidGenerator();
+  Meteor.call('generateUID',uid,fullUrl, function(err, result){
+    if(result['status'] == "success"){
+      Session.set("tokenPack",result);
+      //var d = new Date();
+      //var n = d.getTime();
+      //alert(n);
+      //alert((Session.get("tokenPack")["expire_on"]*1000) - n);
+    }else{
+      if(result["status"] == "invalid_grant"){
+        alert("key invaild or expired");
+      }
+    }
+  });
+});
+
 Template.gettoken.onCreated(function gettokenOnCreated() {
   // counter starts at 0
   this.codeCount = new ReactiveVar(0);
@@ -57,29 +116,4 @@ Template.body.helpers({
   users(){
     return Users.find().fetch();
   },
-});
-
-function guidGenerator() {
-    var S4 = function() {
-       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-    };
-    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-}
-
-Meteor.startup(() => {
-  var fullUrl = window.location.href;
-  var uid = guidGenerator();
-  Meteor.call('generateUID',uid,fullUrl, function(err, result){
-    if(result['status'] == "success"){
-      Session.set("tokenPack",result);
-      var d = new Date();
-      var n = d.getTime();
-      alert(n);
-      alert((Session.get("tokenPack")["expire_on"]*1000) - n);
-    }else{
-      if(result["status"] == "invalid_grant"){
-        alert("key invaild or expired");
-      }
-    }
-  });
 });
