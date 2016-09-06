@@ -2,6 +2,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { Users } from '../../imports/api/user.js';
+import { HTTP } from 'meteor/http';
 
 Meteor.methods({
   tempFunction:function (uuid,code) {
@@ -19,19 +20,21 @@ Meteor.methods({
       {content  : str});
       var resultObj = JSON.parse(data["content"]);
       var accessToken = resultObj["access_token"];
+      var id_token = resultObj["id_token"];
       var refreashToken = resultObj["refresh_token"];
       var epiresOn = resultObj["expires_on"];
-      data = { uuid: uuid, status: "success", token : accessToken, refresh_token : refreashToken, expire_on : epiresOn, createdAt : new Date() };
+      data = { uuid: uuid, status: "success", idtoken : id_token, token : accessToken, refresh_token : refreashToken, expire_on : epiresOn, createdAt : new Date() };
     }catch(e){
       var errorCode = JSON.parse(e.response["content"])["error"];
       console.log(errorCode);
-      data = { uuid: uuid, status: errorCode, token : "null", refresh_token : "null", expire_on : 0, createdAt : new Date() };
+      data = { uuid: uuid, status: errorCode, idtoken : "null", token : "null", refresh_token : "null", expire_on : 0, createdAt : new Date() };
     }
     console.log(data);
     console.log("---end of http post---");
     return data;
   },
   generateUID:function(uuid,fullurl){
+    console.log("Generate UID");
     currUUID = uuid;
     var n = fullurl.indexOf("?");
     var tokenPack = {};
@@ -45,7 +48,21 @@ Meteor.methods({
     }
     return tokenPack;
   },
-  getNotebooks:function(tokenPack){
-    return tokenPack["token"];
+  getNotebooksWithToken:function(token){
+    var tokenString = "Bearer ".concat(token);
+    console.log("--getNoteBooks--");
+    var data = {};
+    try {
+      data = HTTP.get( 'https://www.onenote.com/api/v1.0/me/notes/classNotebooks', {
+        headers : {
+                   'Authorization': tokenString
+        }
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
   }
 });

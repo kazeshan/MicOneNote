@@ -3,29 +3,11 @@
 </head>
 
 <body>
-  {{> hello}}
-  <div>
-    {{#each users}}
-      {{> user_template}}
-    {{/each}}
-  </div>
-
   <div>
     {{> getNoteBooks}}
   </div>
-
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
-</template>
-
-<template name="gettoken">
-  <input id="codeinput" type="text" name="text" placeholder="inputcode" />
-  <p>{{codeCount}} {{msg}}</p>
-  <button class="mybutton">Get token</button>
-</template>
 
 <template name="user_template">
   <p><b>Created Date : </b> {{createdDate}} <b>Status : </b>{{status}} <b>Token : </b> {{token}}</p>
