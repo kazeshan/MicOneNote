@@ -1,7 +1,5 @@
 
 import { Meteor } from 'meteor/meteor'
-import { Session } from 'meteor/session'
-import { Users } from '../../imports/api/user.js';
 import { HTTP } from 'meteor/http';
 
 Meteor.methods({
@@ -48,12 +46,30 @@ Meteor.methods({
     }
     return tokenPack;
   },
-  getNotebooksWithToken:function(token){
-    var tokenString = "Bearer ".concat(token);
+  API_getNoteBooks:function(a_token){
+    var tokenString = "Bearer ".concat(a_token);
     console.log("--getNoteBooks--");
     var data = {};
     try {
       data = HTTP.get( 'https://www.onenote.com/api/v1.0/me/notes/classNotebooks', {
+        headers : {
+                   'Authorization': tokenString
+        }
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
+  },
+  API_getStudentsInNotebook:function(noteBookId, a_token){
+    var tokenString = "Bearer ".concat(a_token);
+    console.log("--getNoteBookStudents-- " + noteBookId);
+    var data = {};
+    try {
+      var link = "https://www.onenote.com/api/v1.0/me/notes/notebooks/"+id+"/permissions";
+      data = HTTP.get( link, {
         headers : {
                    'Authorization': tokenString
         }

@@ -6,6 +6,12 @@
   <div>
     {{> getNoteBooks}}
   </div>
+
+  <div>
+    {{#each notebooksSet}}
+      {{> notebook_template}}
+    {{/each}}
+  </div>
 </body>
 
 
@@ -17,6 +23,6 @@
   <button>Get My Notebooks</button>
 </template>
 
-<template name="notebook">
-  {{notebooks}}
+<template name="notebook_template">
+  <p>ID : {{rawId}} Name : {{name}} </p>
 </template>

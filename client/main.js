@@ -2,8 +2,9 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { HTTP } from 'meteor/http'
 import { Mongo } from 'meteor/mongo';
-import { Users } from '../imports/api/user.js';
+import { NotebooksDB } from '../imports/api/mongoRelations.js';
 import { Session } from 'meteor/session';
+import { Meteor } from 'meteor/meteor'
 
 import './main.html';
 import '../imports/ui/body.js';
@@ -11,16 +12,12 @@ import '../imports/ui/body.js';
 Template.getNoteBooks.events({
   'click button'(event, instance) {
     var code =   Session.get("accessToken");
-    Meteor.call('getNotebooksWithToken', code, function(err, result){
-      alert(result);
+    Meteor.call('getNoteBooks', code, function(){
     });
   },
 });
 
 Template.getNoteBooks.helpers({
-  notebooks() {
-    return Session.get("notebooks");
-  }
 });
 
 
@@ -46,9 +43,13 @@ Meteor.startup(() => {
   });
 });
 
+Template.body.onCreated(function bodyOnCreated() {
+
+});
+
 Template.body.helpers({
-  users(){
-    return Users.find().fetch();
+  notebooksSet() {
+    return NotebooksDB.find({});;
   },
 });
 
