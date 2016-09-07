@@ -12,6 +12,7 @@ Meteor.startup(() => {
 Meteor.methods({
   getNoteBooks:function (code) {
     Meteor.call('API_getNoteBooks', code, function(err, result){
+      NotebooksDB.remove({});
       if(result["statusCode"] == 200)
       {
         var values = EJSON.parse(result["content"])["value"];
@@ -21,6 +22,11 @@ Meteor.methods({
           NotebooksDB.insert({rawId: id, name: name});
         }
       }
+    });
+  },
+  getStudents:function (code, notebookId) {
+    Meteor.call('API_getStudents', code, notebookId, function(err, result){
+      console.log(result);
     });
   }
 });

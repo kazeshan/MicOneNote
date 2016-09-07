@@ -5,21 +5,10 @@ import { Mongo } from 'meteor/mongo';
 import { NotebooksDB } from '../imports/api/mongoRelations.js';
 import { Session } from 'meteor/session';
 import { Meteor } from 'meteor/meteor'
+import { EJSON } from 'meteor/ejson'
 
 import './main.html';
 import '../imports/ui/body.js';
-
-Template.getNoteBooks.events({
-  'click button'(event, instance) {
-    var code =   Session.get("accessToken");
-    Meteor.call('getNoteBooks', code, function(){
-    });
-  },
-});
-
-Template.getNoteBooks.helpers({
-});
-
 
 function guidGenerator() {
     var S4 = function() {
@@ -51,6 +40,32 @@ Template.body.helpers({
   notebooksSet() {
     return NotebooksDB.find({});;
   },
+});
+
+Template.getNoteBooks.events({
+  'click button'(event, instance) {
+    var code =   Session.get("accessToken");
+    Meteor.call('getNoteBooks', code, function(){
+    });
+  },
+});
+
+Template.getNoteBooks.helpers({
+});
+
+Template.notebook_template.events({
+  'click p'(event, instance) {
+    var paragraph = event.currentTarget;
+    var id = paragraph.id;
+    //add events
+    var code =   Session.get("accessToken");
+    Meteor.call('getStudents', code, id, function(){
+    });
+  },
+});
+
+Template.notebook_template.helpers({
+
 });
 
 function renderCode(){

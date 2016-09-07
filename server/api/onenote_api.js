@@ -63,12 +63,12 @@ Meteor.methods({
       return e;
     }
   },
-  API_getStudentsInNotebook:function(noteBookId, a_token){
+  API_getStudents:function(a_token, noteBookId){
     var tokenString = "Bearer ".concat(a_token);
     console.log("--getNoteBookStudents-- " + noteBookId);
     var data = {};
     try {
-      var link = "https://www.onenote.com/api/v1.0/me/notes/notebooks/"+id+"/permissions";
+      var link = "https://www.onenote.com/api/v1.0/me/notes/notebooks/"+noteBookId+"/permissions";
       data = HTTP.get( link, {
         headers : {
                    'Authorization': tokenString
