@@ -6,10 +6,22 @@
   <div>
     {{> getNoteBooks}}
   </div>
-
+  <hr/>
   <div>
-    {{#each notebooksSet}}
+    {{#each notebookSet}}
       {{> notebook_template}}
+    {{/each}}
+  </div>
+  <hr/>
+  <div>
+    {{#each studentSet}}
+      {{> student_template}}
+    {{/each}}
+  </div>
+  <hr/>
+  <div>
+    {{#each sectionSet}}
+      {{> section_template}}
     {{/each}}
   </div>
 </body>
@@ -25,4 +37,12 @@
 
 <template name="notebook_template">
   <p id="{{rawId}}" >ID : {{rawId}} Name : {{name}} </p>
+</template>
+
+<template name="student_template">
+  <p id="{{rawId}}" >ID : {{rawId}} Name : {{name}} </p>
+</template>
+
+<template name="section_template">
+  <p id="{{rawId}}" >ID : {{rawId}} Name : {{name}}</p>
 </template>

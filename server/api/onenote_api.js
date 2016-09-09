@@ -63,16 +63,131 @@ Meteor.methods({
       return e;
     }
   },
-  API_getStudents:function(a_token, noteBookId){
+  API_getStudents:function(a_token, notebookId){
     var tokenString = "Bearer ".concat(a_token);
-    console.log("--getNoteBookStudents-- " + noteBookId);
+    console.log("--getNoteBookStudents-- " + notebookId);
     var data = {};
     try {
-      var link = "https://www.onenote.com/api/v1.0/me/notes/notebooks/"+noteBookId+"/permissions";
+      var link = "https://www.onenote.com/api/v1.0/me/notes/notebooks/"+notebookId+"/permissions";
       data = HTTP.get( link, {
         headers : {
                    'Authorization': tokenString
         }
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
+  },
+  API_getNoteBookSection:function(a_token, notebookId){
+    var tokenString = "Bearer ".concat(a_token);
+    console.log("--getNoteBookSection-- " + notebookId);
+    var data = {};
+    try {
+      var link = "https://www.onenote.com/api/v1.0/me/notes/notebooks/"+notebookId+"/sectionGroups?expand=sections";
+      data = HTTP.get( link, {
+        headers : {
+                   'Authorization': tokenString
+        }
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
+  },
+  API_getNoteBookSectionPages:function(a_token, selfLink){
+    var tokenString = "Bearer ".concat(a_token);
+    console.log("--getNoteBookSectionPages-- " + selfLink);
+    var data = {};
+    try {
+      var link = selfLink+"/pages";
+      data = HTTP.get( link, {
+        headers : {
+                   'Authorization': tokenString
+        }
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
+  },
+  API_getNoteBookSectionPageContent:function(a_token, pageLink){
+    var tokenString = "Bearer ".concat(a_token);
+    console.log("--getNoteBookSectionPageContent-- " + pageLink);
+    var data = {};
+    try {
+      var link = selfLink+"?preAuthenticated=true";
+      data = HTTP.get( link, {
+        headers : {
+                   'Authorization': tokenString
+        }
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
+  },
+  API_updateScoreAndComments:function(a_token, pageLink, contentUpdate){
+    var tokenString = "Bearer ".concat(a_token);
+    console.log("--updateScore-- " + pageLink);
+    var data = {};
+    try {
+      //notes/pages/id/content
+      var link = pageLink+"/content";
+      data = HTTP.call("POST", link, {
+        headers : {
+                   'Authorization': tokenString,
+                   'Content-Type':'application/json'
+        },
+        content : contentUpdate
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
+  },
+  API_createNotebook:function(a_token, notebookObj){
+    var tokenString = "Bearer ".concat(a_token);
+    console.log("--createNotebook--");
+    var data = {};
+    try {
+      var link = "https://www.onenote.com/api/v1.0/me/notes/classNotebooks";
+      data = HTTP.call("POST", link, {
+        headers : {
+                   'Authorization': tokenString,
+                   'Content-Type':'application/json'
+        },
+        content : notebookObj
+      });
+      console.log("success");
+      return data;
+    }catch(e){
+      console.log("fail");
+      return e;
+    }
+  },
+  API_addPermissionToSectionGrp:function(a_token, sectionGrpLink, user){
+    var tokenString = "Bearer ".concat(a_token);
+    console.log("--addingPermission--");
+    var data = {};
+    try {
+      var link = sectionGrpLink + "/permissions";
+      data = HTTP.call("POST", link, {
+        headers : {
+                   'Authorization': tokenString,
+                   'Content-Type':'application/json'
+        },
+        content : user
       });
       console.log("success");
       return data;

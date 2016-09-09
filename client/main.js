@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { HTTP } from 'meteor/http'
 import { Mongo } from 'meteor/mongo';
-import { NotebooksDB } from '../imports/api/mongoRelations.js';
+import { NotebooksDB, StudentsDB, SectionsDB } from '../imports/api/mongoRelations.js';
 import { Session } from 'meteor/session';
 import { Meteor } from 'meteor/meteor'
 import { EJSON } from 'meteor/ejson'
@@ -37,9 +37,15 @@ Template.body.onCreated(function bodyOnCreated() {
 });
 
 Template.body.helpers({
-  notebooksSet() {
+  notebookSet() {
     return NotebooksDB.find({});;
   },
+  studentSet() {
+    return StudentsDB.find({});
+  },
+  sectionSet() {
+    return SectionsDB.find({});
+  }
 });
 
 Template.getNoteBooks.events({
@@ -59,13 +65,23 @@ Template.notebook_template.events({
     var id = paragraph.id;
     //add events
     var code =   Session.get("accessToken");
-    Meteor.call('getStudents', code, id, function(){
-    });
+    Meteor.call('getStudents', code, id);
+    Meteor.call('getNotebookSections', code, id);
   },
 });
 
 Template.notebook_template.helpers({
 
+});
+
+Template.section_template.events({
+  'click p'(event, instance) {
+    var paragraph = event.currentTarget;
+    var id = paragraph.id;
+    //add events
+    var code =   Session.get("accessToken");
+    //Meteor.call('getNotebookSectionPages', code, selfLink);
+  }
 });
 
 function renderCode(){
